@@ -1,0 +1,255 @@
+<!doctype html><html><head><meta charset='utf-8'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.4.1/github-markdown.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.css">
+    <link rel="stylesheet" href="https://gitcdn.xyz/repo/goessner/mdmath/master/css/texmath.css">
+    <link rel="stylesheet" href="https://gitcdn.xyz/repo/goessner/mdmath/master/css/vscode-texmath.css">
+    
+    </head><body class="markdown-body">
+    <h1 data-line="0" class="code-line" id="hw6">操作系统作业 HW6</h1>
+    <pre data-line="2" class="code-line"><code>    江学强 PB16120100
+    </code></pre>
+    <h2 data-line="4" class="code-line" id="1">1</h2>
+    <p data-line="6" class="code-line">The first known correct software solution to the critical-section problem for twoprocesses was developed by Dekker. The two processes, P0 and P1, share the
+    following variables: boolean flag[2]; /* initially false */
+    int turn ; The structure of process Pi (i == 0 or 1) is shown in Figure 1; the other process is Pj
+    (j == 1 or 0). Prove that the algorithm satisfies all three requirements for the
+    critical-section problem.</p>
+    <p data-line="12" class="code-line">互斥问题：flag表示进程是否希望进入critical section，如果 flag[0]和flag[1]均为true，但只有变量turn==1时P1执行critical section，turn==0时P0执行critical section</p>
+    <p data-line="14" class="code-line">前进（progress）问题：可以看出当一个进程结束critical section时，程序立刻将turn的值设为另一个进程，并且将自己的flag值设为false，此时刚刚结束的进程不会被选择进入critical section，只有另一个进程可能进入critical section（当另一个进程的flag值为true）</p>
+    <p data-line="16" class="code-line">有限等待问题：一个进程在进入critical section之前会优先让另一个进程进入critical section（当另一个进程的flag值为true时），这就避免了一个进程持续重复进入critical section而使得另一个进程无限等待</p>
+    <h2 data-line="18" class="code-line" id="2">2</h2>
+    <p data-line="20" class="code-line">Consider the code example for allocating and releasing processes shown in Figure 2.
+    a. Identify the race condition(s).
+    b. Assume you have a mutex lock named mutex with the operations  acquire()  and
+    release() . Indicate where the locking needs to be placed to prevent the race condition(s).</p>
+    <p data-line="25" class="code-line">a：number_of_process可能会带来数据冒险，对其修改没有保证互斥</p>
+    <p data-line="27" class="code-line">b：在进入函数（题目中的两个函数）之前调用acquire，函数调用结束调用release</p>
+    <h2 data-line="29" class="code-line" id="3">3</h2>
+    <p data-line="31" class="code-line">Servers can be designed to limit the number of open connections. For example, a
+    server may wish to have only N socket connections at any point in time. As soon as
+    N connections are made, the server will not accept another incoming connection until
+    an existing connection is released. Use semaphores to limit the number of concurrent
+    connections in the server.</p>
+    <p data-line="37" class="code-line">信号量初始化为服务器最大连接数，当有服务请求连接时调用down（），释放连接时调用up（）</p>
+    <h2 data-line="39" class="code-line" id="4">4</h2>
+    <p data-line="41" class="code-line">Consider the traffic deadlock depicted in Figure 3.
+    a. Show that the four necessary conditions for deadlock indeed hold in this
+    example.
+    b. State a simple rule for avoiding deadlocks in this system.</p>
+    <p data-line="46" class="code-line">a:</p>
+    <ul>
+    <li data-line="48" class="code-line">
+    <p data-line="48" class="code-line">同时只有一辆车可以通过一个十字路口</p>
+    </li>
+    <li data-line="50" class="code-line">
+    <p data-line="50" class="code-line">车辆占据十字路口但不能通过时始终保持占据</p>
+    </li>
+    <li data-line="52" class="code-line">
+    <p data-line="52" class="code-line">没有车辆可以抢占前面的车辆通过路口</p>
+    </li>
+    <li data-line="54" class="code-line">
+    <p data-line="54" class="code-line">每个所有的车辆都等待占据路口的车辆通过路口，形成循环等待</p>
+    </li>
+    </ul>
+    <p data-line="56" class="code-line">b:</p>
+    <p data-line="58" class="code-line">让占据十字路口并且正在等待的车辆停止等待后退即可（当然后面的车也得退）</p>
+    <h2 data-line="60" class="code-line" id="5">5</h2>
+    <p data-line="62" class="code-line">Consider the deadlock situation that can occur in the diningphilosophers problem
+    when the philosophers obtain the chopsticks one at a time. Discuss how the four
+    necessary conditions for deadlock hold in this setting. Describe a deadlock-free
+    solution, and discuss which necessary conditions are eliminated in your solution</p>
+    <p data-line="67" class="code-line">四个条件</p>
+    <ul>
+    <li data-line="69" class="code-line">
+    <p data-line="69" class="code-line">每只筷子同时只能一个哲学家占有</p>
+    </li>
+    <li data-line="71" class="code-line">
+    <p data-line="71" class="code-line">哲学家不能抢走别的哲学家手中的筷子</p>
+    </li>
+    <li data-line="73" class="code-line">
+    <p data-line="73" class="code-line">哲学家拿到筷子但没法进餐时也始终拿着筷子不放</p>
+    </li>
+    <li data-line="75" class="code-line">
+    <p data-line="75" class="code-line">每个哲学家都在等待自己需要的另一只筷子</p>
+    </li>
+    </ul>
+    <p data-line="77" class="code-line">解决方式：哲学家拿到一只筷子但不能拿到另一只筷子时就放下手中的筷子等待，这种方法是解决了上面叙述的第三个死锁条件</p>
+    <h2 data-line="79" class="code-line" id="6">6</h2>
+    <p data-line="81" class="code-line">Discuss how the following pairs of scheduling criteria conflict in certain settings.
+    a. CPU utilization and response time
+    b. Average turnaround time and maximum waiting time
+    c. I/O device utilization and CPU utilization</p>
+    <p data-line="86" class="code-line">a:CPU利用率提高需要降低上下文切换的频率，这就导致响应时间增加</p>
+    <p data-line="88" class="code-line">b:采取sjf算法可以降低平均周转时间，但这会很大程度上增长那些需要运行时间长的进程的等待时间</p>
+    <p data-line="90" class="code-line">c:I/O利用率增大就是要尽快地响应I/O地请求但是这回导致更频繁地进行上下文切换，会降低CPU地利用率</p>
+    <h2 data-line="92" class="code-line" id="7">7</h2>
+    <p data-line="94" class="code-line">Consider the exponential average formula used to predict the length of the next CPU
+    burst. What are the implications of assigning the following values to the parameters
+    used by the algorithm?
+    a. α = 0 and τ 0 = 100 milliseconds
+    b. α = 0.99 and τ 0 = 10 milliseconds</p>
+    <p data-line="100" class="code-line">α = 0 τ 0 = 100时假设下一次CPU burst时100ms；α = 0.99 and τ 0 = 10考虑了时间局部性原理，给距离时间近的有关的进程赋予了更高的权重</p>
+    <h2 data-line="102" class="code-line" id="8">8</h2>
+    <p data-line="104" class="code-line">Consider the following set of processes, with the length of the CPU burst time given
+    in milliseconds:</p>
+    <p data-line="107" class="code-line">The processes are assumed to have arrived in the order P1, P2, P3, P4, P5, all at
+    time 0.
+    a. Draw four Gantt charts that illustrate the execution of these processes using the
+    following scheduling algorithms: FCFS, SJF, nonpreemptive priority (a smaller
+    priority number implies a higher priority), and RR (quantum = 1).</p>
+    <p data-line="113" class="code-line">b. What is the turnaround time of each process for each of the scheduling
+    algorithms in part a?</p>
+    <p data-line="116" class="code-line">c. What is the waiting time of each process for each of these scheduling
+    algorithms?</p>
+    <p data-line="119" class="code-line">d. Which of the algorithms results in the minimum average waiting time (over all
+    processes)?</p>
+    <p data-line="122" class="code-line">a:</p>
+    <p data-line="124" class="code-line">FCFS： 111111111233345555</p>
+    <p data-line="126" class="code-line">RR：  12345135151515111</p>
+    <p data-line="128" class="code-line">SJF：24335555111111111</p>
+    <p data-line="130" class="code-line">Priority：25555511111111334</p>
+    <p data-line="132" class="code-line">b:
+    turned around time</p>
+    <table>
+    <thead>
+    <tr>
+    <th></th>
+    <th>FCFS</th>
+    <th>RR</th>
+    <th>SJF</th>
+    <th>Priority</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>P1</td>
+    <td>10</td>
+    <td>19</td>
+    <td>19</td>
+    <td>16</td>
+    </tr>
+    <tr>
+    <td>P2</td>
+    <td>11</td>
+    <td>2</td>
+    <td>1</td>
+    <td>1</td>
+    </tr>
+    <tr>
+    <td>P3</td>
+    <td>13</td>
+    <td>7</td>
+    <td>4</td>
+    <td>18</td>
+    </tr>
+    <tr>
+    <td>P4</td>
+    <td>14</td>
+    <td>4</td>
+    <td>2</td>
+    <td>19</td>
+    </tr>
+    <tr>
+    <td>P5</td>
+    <td>19</td>
+    <td>14</td>
+    <td>9</td>
+    <td>6</td>
+    </tr>
+    </tbody>
+    </table>
+    <p data-line="143" class="code-line">c:
+    waiting time</p>
+    <table>
+    <thead>
+    <tr>
+    <th></th>
+    <th>FCFS</th>
+    <th>RR</th>
+    <th>SJF</th>
+    <th>Priority</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>P1</td>
+    <td>0</td>
+    <td>9</td>
+    <td>9</td>
+    <td>6</td>
+    </tr>
+    <tr>
+    <td>p2</td>
+    <td>10</td>
+    <td>1</td>
+    <td>0</td>
+    <td>0</td>
+    </tr>
+    <tr>
+    <td>P3</td>
+    <td>11</td>
+    <td>5</td>
+    <td>2</td>
+    <td>16</td>
+    </tr>
+    <tr>
+    <td>P4</td>
+    <td>13</td>
+    <td>3</td>
+    <td>1</td>
+    <td>18</td>
+    </tr>
+    <tr>
+    <td>P5</td>
+    <td>14</td>
+    <td>9</td>
+    <td>4</td>
+    <td>1</td>
+    </tr>
+    </tbody>
+    </table>
+    <p data-line="154" class="code-line">d:SJF算法</p>
+    <h2 data-line="156" class="code-line" id="9">9</h2>
+    <p data-line="158" class="code-line">Which of the following scheduling algorithms could result in starvation?
+    a. First-come, first-served
+    b. Shortest job first
+    c. Round robin
+    d. Priority</p>
+    <p data-line="164" class="code-line">b d</p>
+    <h2 data-line="166" class="code-line" id="10">10</h2>
+    <p data-line="168" class="code-line">Consider a system running ten I/O-bound tasks and one CPU-bound task. Assume
+    that the I/O-bound tasks issue an I/O operation once for every millisecond of CPU
+    computing and that each I/O operation takes 10 milliseconds to complete. Also
+    assume that the context-switching overhead is 0.1millisecond and that all processes
+    are long-running tasks. Describe is the CPU utilization for a round-robin scheduler
+    when:
+    a. The time quantum is 1 millisecond
+    b. The time quantum is 10 milliseconds</p>
+    <p data-line="177" class="code-line">a:91%</p>
+    <p data-line="179" class="code-line">b:94%</p>
+    <h2 data-line="181" class="code-line" id="11">11</h2>
+    <p data-line="183" class="code-line">Assume that two tasks Aand B are running on a Linux system. The nice values of
+    Aand B are −5 and +5, respectively. Using the CFS scheduler as a guide, describe
+    how the respective values of vruntime vary between the two processes given each of
+    the following scenarios:
+    a. Both Aand B are CPU-bound.
+    b. A is I/O-bound, and B is CPU-bound.
+    c. A is CPU-bound, and B is I/O-bound.</p>
+    <p data-line="191" class="code-line">a:
+    A的vruntime增长地更慢，二者都是CPU-bound，A的vruntime比B小</p>
+    <p data-line="194" class="code-line">b:
+    A的vruntime比B小因为A的vruntime增长的慢并且占用CPU的时间短</p>
+    <p data-line="197" class="code-line">c:
+    不能确定</p>
+    <h2 data-line="200" class="code-line" id="12">12</h2>
+    <p data-line="202" class="code-line">Give an example to illustrate under what circumstances rate-monotonic scheduling
+    is inferior to earliest-deadline-first scheduling in meeting the deadlines associated
+    with processes?</p>
+    <p data-line="206" class="code-line">举ppt中的例子</p>
+    <p data-line="208" class="code-line"><img src="HW6_1.png" alt=""></p>
+    <p data-line="210" class="code-line">速率下降算法优先执行P1，导致P2第二次未能按时完成</p>
+    <p data-line="212" class="code-line"><img src="HW6_2.png" alt=""></p>
+    <p data-line="214" class="code-line">EDF算法根据ddl动态调整，两个进程都能按时完成</p>
+    
+    </body></html>
